@@ -1,0 +1,171 @@
+1. endpoint: user_info_1
+method: POST
+form_params: 
+   1) age (int)
+   2) weight (int)
+   3) name (str)
+
+response: 
+{'name': name,
+          'age': age,
+          'daily_food': weight * 0.012,
+          'daily_sleep': weight * 2.5}
+
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+
+//создать схему с помощью валидатора
+let schema = {
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "person": {
+                "u_age": 32,
+                "u_name": [
+                    "elena",
+                    2000,
+                    32
+                ],
+                "u_salary_1_5_year": 8000
+            },
+            "qa_salary_after_12_months": 5800.0,
+            "qa_salary_after_6_months": 4000,
+            "start_qa_salary": 2000
+        }
+    ],
+    "required": [
+        "person",
+        "qa_salary_after_12_months",
+        "qa_salary_after_6_months",
+        "start_qa_salary"
+    ],
+    "properties": {
+        "person": {
+            "$id": "#/properties/person",
+            "type": "object",
+            "title": "The person schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "u_age": 32,
+                    "u_name": [
+                        "elena",
+                        2000,
+                        32
+                    ],
+                    "u_salary_1_5_year": 8000
+                }
+            ],
+            "required": [
+                "u_age",
+                "u_name",
+                "u_salary_1_5_year"
+            ],
+            "properties": {
+                "u_age": {
+                    "$id": "#/properties/person/properties/u_age",
+                    "type": "integer",
+                    "title": "The u_age schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": 0,
+                    "examples": [
+                        32
+                    ]
+                },
+                "u_name": {
+                    "$id": "#/properties/person/properties/u_name",
+                    "type": "array",
+                    "title": "The u_name schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": [],
+                    "examples": [
+                        [
+                            "elena",
+                            2000
+                        ]
+                    ],
+                    "additionalItems": true,
+                    "items": {
+                        "$id": "#/properties/person/properties/u_name/items",
+                        "anyOf": [
+                            {
+                                "$id": "#/properties/person/properties/u_name/items/anyOf/0",
+                                "type": "string",
+                                "title": "The first anyOf schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "elena"
+                                ]
+                            },
+                            {
+                                "$id": "#/properties/person/properties/u_name/items/anyOf/1",
+                                "type": "integer",
+                                "title": "The second anyOf schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": 0,
+                                "examples": [
+                                    2000,
+                                    32
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "u_salary_1_5_year": {
+                    "$id": "#/properties/person/properties/u_salary_1_5_year",
+                    "type": "integer",
+                    "title": "The u_salary_1_5_year schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": 0,
+                    "examples": [
+                        8000
+                    ]
+                }
+            },
+            "additionalProperties": true
+        },
+        "qa_salary_after_12_months": {
+            "$id": "#/properties/qa_salary_after_12_months",
+            "type": "number",
+            "title": "The qa_salary_after_12_months schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0.0,
+            "examples": [
+                5800.0
+            ]
+        },
+        "qa_salary_after_6_months": {
+            "$id": "#/properties/qa_salary_after_6_months",
+            "type": "integer",
+            "title": "The qa_salary_after_6_months schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                4000
+            ]
+        },
+        "start_qa_salary": {
+            "$id": "#/properties/start_qa_salary",
+            "type": "integer",
+            "title": "The start_qa_salary schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                2000
+            ]
+        }
+    },
+    "additionalProperties": true
+}
+
+//сниппет Use Tiny Validator for JSON data
+pm.test('Schema is valid', function () {
+    pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;
+});
