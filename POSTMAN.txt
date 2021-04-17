@@ -197,7 +197,7 @@ pm.test("salary_1_5_year", function () {
 });
 
 
-2	http://116.203.27.46:5002/new_data
+2. 	http://116.203.27.46:5002/new_data
 	req.
 	POST
 	age: int
@@ -205,7 +205,7 @@ pm.test("salary_1_5_year", function () {
 	name: str
 	auth_token
 
-Resp.
+Responce
 {'name':name,
   'age': int(age),
   'salary': [salary, str(salary*2), str(salary*3)]}
@@ -216,3 +216,102 @@ Resp.
 3) Достать значение из поля 'u_salary_1.5_year' и передать в поле salary запроса http:// (http://188.130.138.105:5001/new_data)116.203.27.46:5002 (http://188.130.138.105:5001/new_data)/get_test_user
 4) В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.
 5) проверить, что 2-й элемент массива salary больше 1-го и 0-го
+
+
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+//2 Проверка структуры json в ответе.
+let schema = {
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "age": 10,
+            "name": "elena",
+            "salary": [
+                2000,
+                "4000",
+                "6000"
+            ]
+        }
+    ],
+    "required": [
+        "age",
+        "name",
+        "salary"
+    ],
+    "properties": {
+        "age": {
+            "$id": "#/properties/age",
+            "type": "integer",
+            "title": "The age schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                10
+            ]
+        },
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "The name schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "elena"
+            ]
+        },
+        "salary": {
+            "$id": "#/properties/salary",
+            "type": "array",
+            "title": "The salary schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": [],
+            "examples": [
+                [
+                    2000,
+                    "4000"
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/salary/items",
+                "anyOf": [
+                    {
+                        "$id": "#/properties/salary/items/anyOf/0",
+                        "type": "integer",
+                        "title": "The first anyOf schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": 0,
+                        "examples": [
+                            2000
+                        ]
+                    },
+                    {
+                        "$id": "#/properties/salary/items/anyOf/1",
+                        "type": "string",
+                        "title": "The second anyOf schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "4000",
+                            "6000"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "additionalProperties": true
+}
+
+pm.test('Schema is valid', function () { // SNIPPET - Use Tiny Validator for JSON data
+    pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;
+});
+
+
+
