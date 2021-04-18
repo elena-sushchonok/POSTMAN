@@ -213,9 +213,8 @@ Responce
 Тесты:
 1) Статус код 200
 2) Проверка структуры json в ответе.
-3) Достать значение из поля 'u_salary_1.5_year' и передать в поле salary запроса http:// (http://188.130.138.105:5001/new_data)116.203.27.46:5002 (http://188.130.138.105:5001/new_data)/get_test_user
-4) В ответе указаны коэффициенты умножения salary, напишите тесты по проверке правильности результата перемножения на коэффициент.
-5) проверить, что 2-й элемент массива salary больше 1-го и 0-го
+3) В ответе указаны коэффициенты умножения salary, написать тесты по проверке правильности результата перемножения на коэффициент.
+4) проверить, что 2-й элемент массива salary больше 1-го и 0-го
 
 
 pm.test("Status code is 200", function () {
@@ -313,5 +312,13 @@ pm.test('Schema is valid', function () { // SNIPPET - Use Tiny Validator for JSO
     pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;
 });
 
+
+pm.test("Coefficients salary", function () {
+    var jsonData = pm.response.json();
+    let salary1 = +(jsonData.salary[1]);
+    let salary2 = +(jsonData.salary[2]);
+    pm.expect(salary1).to.eql(jsonData.salary[0]*2);
+    pm.expect(salary2).to.eql(jsonData.salary[0]*3);
+});
 
 
