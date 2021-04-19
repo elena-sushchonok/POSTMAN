@@ -321,4 +321,10 @@ pm.test("Coefficients salary", function () {
     pm.expect(salary2).to.eql(jsonData.salary[0]*3);
 });
 
+pm.test("Massiv", function () {
+    var jsonData = pm.response.json();
+    let salary1 = +(jsonData.salary[1]);
+    let salary2 = +(jsonData.salary[2]);
+    pm.expect(salary2>salary1).to.be.true;
+});
 
