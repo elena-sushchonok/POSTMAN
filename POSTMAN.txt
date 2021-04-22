@@ -353,3 +353,73 @@ Resp.
 pm.test("Status code is 200", function () {
     pm.response.to.have.status(200);
 });
+
+//2 задание Проверка структуры json в ответе
+ let schema = {
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "age": 35,
+            "daily_food": 0.6,
+            "daily_sleep": 125.0,
+            "name": "elena"
+        }
+    ],
+    "required": [
+        "age",
+        "daily_food",
+        "daily_sleep",
+        "name"
+    ],
+    "properties": {
+        "age": {
+            "$id": "#/properties/age",
+            "type": "integer",
+            "title": "The age schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                35
+            ]
+        },
+        "daily_food": {
+            "$id": "#/properties/daily_food",
+            "type": "number",
+            "title": "The daily_food schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0.0,
+            "examples": [
+                0.6
+            ]
+        },
+        "daily_sleep": {
+            "$id": "#/properties/daily_sleep",
+            "type": "number",
+            "title": "The daily_sleep schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0.0,
+            "examples": [
+                125.0
+            ]
+        },
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "The name schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "elena"
+            ]
+        }
+    },
+    "additionalProperties": true
+}
+
+
+pm.test('Schema is valid', function () {
+    pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;
+});
