@@ -423,3 +423,12 @@ pm.test("Status code is 200", function () {
 pm.test('Schema is valid', function () {
     pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;
 });
+
+
+//3 В ответе указаны коэффициенты умножения weight, напишите тесты по проверке правильности результата перемножения на коэффициент.
+pm.test("Coefficients salary", function () {
+    let jsonData = pm.response.json();
+    let weight = pm.request.body.formdata.get("weight");
+    pm.expect(jsonData.daily_food).to.eql(weight*0.012);
+    pm.expect(jsonData.daily_sleep).to.eql(weight*2.5);
+});
